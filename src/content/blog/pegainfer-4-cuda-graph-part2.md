@@ -1,5 +1,5 @@
 ---
-title: 'pegainfer (4): CUDA Graph (Part 2)'
+title: 'pegainfer (4): From Pre-allocation to Graph Replay'
 description: 'Integrating CUDA Graph into a real Rust inference engine — pre-allocation, DecodeMeta, capture/replay lifecycle, and the pitfalls along the way.'
 pubDate: 'Mar 01 2026'
 ---
