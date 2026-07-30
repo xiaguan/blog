@@ -19,6 +19,7 @@ const posts = (await getCollection('blog')).sort(
 	<body>
 		<Header />
 		<main>
+			<h1>Systems and LLM Inference Engineering</h1>
 			<p class="intro">
 				I'm <strong>susun</strong> — LLM inference engineer, formerly database storage engineer.
 				Writing about systems, inference, and engineering.
@@ -44,6 +45,10 @@ const posts = (await getCollection('blog')).sort(
 </html>
 
 <style>
+	h1 {
+		margin-top: 0;
+		font-size: 1.6em;
+	}
 	.intro {
 		color: var(--text-light, #666);
 		margin-bottom: 0;
