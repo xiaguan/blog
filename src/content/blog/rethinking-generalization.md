@@ -4,6 +4,10 @@ description: '第一次读机器学习论文：从随机标签实验、正则化
 pubDate: 'Sep 06 2026'
 ---
 
+> 我知道我可能会错得离谱，又好奇为什么其他聪明的人对事情的认识与我不同，这促使我既从自己的视角看问题，也从别人的视角看问题。
+>
+> —— 瑞·达利欧《原则》
+
 论文：[Understanding deep learning requires rethinking generalization](https://arxiv.org/abs/1611.03530)。文中配图来自该论文。
 
 第一次读 ML 的论文，可能比较粗糙，有问题多指教。
