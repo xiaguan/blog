@@ -2,11 +2,10 @@
 title: 'deepinfer talk'
 description: 'DeepInfer 推理架构笔记：EPD 分离、池化存储、KV Cache 换入、EPLB、DPLB 与 DSpark。'
 pubDate: 'Oct 24 2026'
+heroImage: '../../assets/blog/deepinfer-talk.png'
 ---
 
 整体架构：EPD 分离
-
-![image.png](/blog/deepinfer-talk/image.png)
 
 首先呢是 epd 分离，也就是 encoder,prefill,decode，其中 prefill 和 decode都有一个池化的存储，系统里还有单独的专用存储节点。
 
