@@ -1,38 +1,22 @@
 ---
-const today = new Date();
+const year = new Date().getFullYear();
 ---
 
 <footer>
-	<div class="footer-content">
-		<span>&copy; {today.getFullYear()} Jinyang Su</span>
-		<span class="separator">&middot;</span>
-		<a href="/rss.xml">RSS</a>
-	</div>
+	© {year} Jinyang Su
 </footer>
+
 <style>
 	footer {
-		padding: 2em 1em;
-		color: var(--text-light, #666);
-		text-align: center;
-		font-size: 0.85em;
-		max-width: 720px;
+		max-width: var(--measure);
 		margin: 0 auto;
-		border-top: 1px solid var(--border, #e8e8e8);
+		padding: 2rem 1.25rem 3rem;
+		color: var(--text-muted);
+		font-size: 0.85rem;
 	}
-	.footer-content {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5em;
-	}
-	.separator {
-		color: var(--border, #e8e8e8);
-	}
-	footer a {
-		color: var(--text-light, #666);
-		text-decoration: none;
-	}
-	footer a:hover {
-		color: var(--link-hover, #0077cc);
+	@media (max-width: 720px) {
+		footer {
+			padding: 2rem 1rem;
+		}
 	}
 </style>

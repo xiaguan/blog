@@ -5,9 +5,14 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { isChinese } from '../lib/posts';
+
+type Link = { title: string; href: string };
 
 type Props = CollectionEntry<'blog'>['data'] & {
 	pageType?: 'website' | 'article';
+	newer?: Link;
+	older?: Link;
 };
 
 const {
@@ -17,18 +22,22 @@ const {
 	updatedDate,
 	heroImage,
 	pageType = 'article',
+	newer,
+	older,
 } = Astro.props;
+const isArticle = pageType === 'article';
 const socialImage = heroImage ? new URL(heroImage.src, Astro.site).href : undefined;
 ---
 
-<html lang="en">
+<!doctype html>
+<html lang={isChinese(title) ? 'zh-CN' : 'en'}>
 	<head>
 		<BaseHead
 			title={title}
 			description={description}
 			type={pageType}
-			pubDate={pageType === 'article' ? pubDate : undefined}
-			updatedDate={pageType === 'article' ? updatedDate : undefined}
+			pubDate={isArticle ? pubDate : undefined}
+			updatedDate={isArticle ? updatedDate : undefined}
 			image={socialImage}
 		/>
 	</head>
@@ -36,24 +45,45 @@ const socialImage = heroImage ? new URL(heroImage.src, Astro.site).href : undefi
 	<body>
 		<Header />
 		<main>
-			<article class="prose">
-				<div class="post-header">
+			<article>
+				<header class="post-header">
 					<h1>{title}</h1>
-					<div class="date">
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<span class="last-updated">
-									(updated <FormattedDate date={updatedDate} />)
-								</span>
-							)
-						}
-					</div>
-					</div>
-					{heroImage && <Image src={heroImage} alt={title} />}
-					<hr />
-				<slot />
+					{
+						isArticle && (
+							<p class="meta">
+								<FormattedDate date={pubDate} />
+								{updatedDate && (
+									<span>
+										· Updated <FormattedDate date={updatedDate} />
+									</span>
+								)}
+							</p>
+						)
+					}
+				</header>
+				{heroImage && <Image class="hero" src={heroImage} alt={title} />}
+				<div class="prose">
+					<slot />
+				</div>
 			</article>
+			{
+				(newer || older) && (
+					<nav class="post-nav" aria-label="More posts">
+						{older ? (
+							<a href={older.href} class="older">
+								<span class="label">← Older</span>
+								<span class="title">{older.title}</span>
+							</a>
+						) : <span />}
+						{newer && (
+							<a href={newer.href} class="newer">
+								<span class="label">Newer →</span>
+								<span class="title">{newer.title}</span>
+							</a>
+						)}
+					</nav>
+				)
+			}
 		</main>
 		<Footer />
 	</body>
@@ -61,16 +91,61 @@ const socialImage = heroImage ? new URL(heroImage.src, Astro.site).href : undefi
 
 <style>
 	.post-header {
-		margin-bottom: 0.5em;
+		margin: 1rem 0 2.5rem;
 	}
 	.post-header h1 {
-		margin: 0 0 0.3em 0;
+		margin: 0;
 	}
-	.date {
-		color: var(--text-light, #666);
-		font-size: 0.9em;
+	.meta {
+		margin: 0.6rem 0 0;
+		color: var(--text-muted);
+		font-size: 0.9rem;
 	}
-	.last-updated {
-		font-style: italic;
+	.hero {
+		margin: 0 0 2.5rem;
+		width: 100%;
+		border-radius: 10px;
+		border: 1px solid var(--border);
+	}
+	.prose > :global(:first-child) {
+		margin-top: 0;
+	}
+	.post-nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-top: 4rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--border);
+	}
+	.post-nav a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		color: inherit;
+		text-decoration: none;
+	}
+	.post-nav .newer {
+		text-align: right;
+	}
+	.label {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+	.post-nav .title {
+		font-weight: 600;
+		line-height: 1.5;
+		transition: color 0.15s;
+	}
+	.post-nav a:hover .title {
+		color: var(--accent);
+	}
+	@media (max-width: 720px) {
+		.post-nav {
+			grid-template-columns: 1fr;
+		}
+		.post-nav .newer {
+			text-align: left;
+		}
 	}
 </style>

@@ -5,47 +5,49 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav>
-		<div class="header-left">
-			<a href="/" class="site-title">{SITE_TITLE}</a>
-		</div>
-		<div class="header-right">
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-			<a href="https://github.com/xiaguan" target="_blank">GitHub</a>
+		<a href="/" class="site-title">{SITE_TITLE}</a>
+		<div class="links">
+			<HeaderLink href="/about/">About</HeaderLink>
+			<a href="https://github.com/xiaguan" target="_blank" rel="noopener">GitHub</a>
+			<a href="/rss.xml">RSS</a>
 		</div>
 	</nav>
 </header>
+
 <style>
 	header {
-		padding: 1em;
-		max-width: 720px;
-		margin: 0 auto;
+		border-bottom: 1px solid var(--border);
 	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		max-width: var(--measure);
+		margin: 0 auto;
+		padding: 1.1rem 1.25rem;
+	}
+	a {
+		color: var(--text-muted);
+		text-decoration: none;
+		font-size: 0.92rem;
+		transition: color 0.15s;
+	}
+	a:hover {
+		color: var(--text);
 	}
 	.site-title {
-		font-size: 1.3em;
-		font-weight: 700;
 		color: var(--text);
-		text-decoration: none;
+		font-size: 1rem;
+		font-weight: 650;
+		letter-spacing: -0.01em;
 	}
-	.site-title:hover {
-		color: var(--link-hover);
-		text-decoration: none;
-	}
-	.header-right {
+	.links {
 		display: flex;
-		gap: 1.2em;
+		gap: 1.4rem;
 	}
-	.header-right a {
-		color: var(--text);
-		text-decoration: none;
-		font-size: 0.95em;
-	}
-	.header-right a:hover {
-		color: var(--link-hover);
+	@media (max-width: 720px) {
+		nav {
+			padding: 1rem;
+		}
 	}
 </style>
