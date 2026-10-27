@@ -49,7 +49,9 @@ ground truth 只需要跑一次：在语料上录下它的分布存成文件，�
 
 **KL** 衡量两个分布整体差多少，0 表示完全一样：
 
-<div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mi mathvariant="normal">K</mi><mi mathvariant="normal">L</mi></mrow><mo stretchy="false">(</mo><mi>P</mi><mtext> </mtext><mi mathvariant="normal">∥</mi><mtext> </mtext><mi>Q</mi><mo stretchy="false">)</mo><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>p</mi><mi>i</mi></msub><mi>ln</mi><mo>⁡</mo><mfrac><msub><mi>p</mi><mi>i</mi></msub><msub><mi>q</mi><mi>i</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">\mathrm{KL}(P\,\|\,Q)=\sum_i p_i \ln\frac{p_i}{q_i}</annotation></semantics></math></span></div>
+$$
+\mathrm{KL}(P\,\|\,Q)=\sum_i p_i \ln\frac{p_i}{q_i}
+$$
 
 上面猫狗的例子，KL 是 0.12。作为对照，同一个模型两个都正确的实现之间，KL 通常只有万分之几，下文把这个水平叫**正常差异**（后面实验会测）。token 一模一样，KL 却是正常差异的几百倍。
 
@@ -57,7 +59,9 @@ KL 有个问题：它会把用户几乎采不到的长尾也算进去。举个�
 
 为什么长尾的影响能这么大？把候选的每个 logit 看成基线的 logit 加一个小误差 δᵢ，KL 近似等于这些误差按概率加权后的方差：
 
-<div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mi mathvariant="normal">K</mi><mi mathvariant="normal">L</mi></mrow><mo>≈</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>p</mi><mi>i</mi></msub><mtext> </mtext><msubsup><mi>δ</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">(</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>p</mi><mi>i</mi></msub><mtext> </mtext><msub><mi>δ</mi><mi>i</mi></msub><msup><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{KL}\approx\frac12\Big(\sum_i p_i\,\delta_i^2-\big(\sum_i p_i\,\delta_i\big)^2\Big)</annotation></semantics></math></span></div>
+$$
+\mathrm{KL}\approx\frac12\Big(\sum_i p_i\,\delta_i^2-\big(\sum_i p_i\,\delta_i\big)^2\Big)
+$$
 
 单个冷门词的概率很小，但它的误差可以很大：概率越小，低精度下的相对误差越大，换到 logit 上就是一个大的 δᵢ。词一多，加起来就不小了。
 
@@ -71,7 +75,9 @@ KL 有个问题：它会把用户几乎采不到的长尾也算进去。举个�
 
 翻转是否严重，要看 margin。直觉很简单：如果猫只比狗高一点点，数值噪声一推就翻了，很正常；但如果猫远远领先，反而翻出来狗，那就有问题了。假设每个 logit 上的噪声是独立的高斯噪声，大小都是 σ，把这个直觉写出来，第二名反超第一名的概率是：
 
-<div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Pr</mi><mo>⁡</mo><mo stretchy="false">(</mo><mtext>第二名反超</mtext><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="normal">Φ</mi><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mo>−</mo><mfrac><mtext>margin</mtext><mrow><msqrt><mn>2</mn></msqrt><mtext> </mtext><mi>σ</mi></mrow></mfrac><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo><mo>≤</mo><mi>exp</mi><mo>⁡</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mo>−</mo><mfrac><msup><mtext>margin</mtext><mn>2</mn></msup><mrow><mn>4</mn><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo></mrow><annotation encoding="application/x-tex">\Pr(\text{第二名反超})=\Phi\Big(-\frac{\text{margin}}{\sqrt2\,\sigma}\Big)\le \exp\Big(-\frac{\text{margin}^2}{4\sigma^2}\Big)</annotation></semantics></math></span></div>
+$$
+\Pr(\text{第二名反超})=\Phi\Big(-\frac{\text{margin}}{\sqrt2\,\sigma}\Big)\le \exp\Big(-\frac{\text{margin}^2}{4\sigma^2}\Big)
+$$
 
 Φ 是标准正态分布的累积概率，右边的上界更好看出规律：概率随 margin 的平方指数下降。假设（当然这里只是假设）噪声大约是 0.1：margin 为 0.1 时，概率是 24%，很容易翻；margin 为 0.5 时，降到万分之二；margin 为 1 时，约万亿分之一，基本不可能。这里只算了第二名，第三名以后的词也可能反超，但它们离得更远，贡献更小。
 
@@ -102,7 +108,9 @@ perplexity 只看原文那个词的概率，把整个分布压成了一个数。
 
 具体来说，准确率在 0 到 1 之间，新旧两个模型的准确率差距，不超过它们生成的整段回答分布之间的距离（全变差距离），而这个距离又被逐步 KL 之和管住：
 
-<div class="math-block"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">∣</mi><msub><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">c</mi></mrow><mtext>基线</mtext></msub><mo>−</mo><msub><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">c</mi></mrow><mtext>候选</mtext></msub><mi mathvariant="normal">∣</mi><mtext>  </mtext><mo>≤</mo><mtext>  </mtext><msqrt><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mrow><mi mathvariant="normal">K</mi><mi mathvariant="normal">L</mi></mrow><mi>t</mi></msub></mrow></msqrt></mrow><annotation encoding="application/x-tex">|\mathrm{Acc}_{\text{基线}}-\mathrm{Acc}_{\text{候选}}|\;\le\;\sqrt{\frac12\sum_{t=1}^{T}\mathrm{KL}_t}</annotation></semantics></math></span></div>
+$$
+|\mathrm{Acc}_{\text{基线}}-\mathrm{Acc}_{\text{候选}}|\;\le\;\sqrt{\frac12\sum_{t=1}^{T}\mathrm{KL}_t}
+$$
 
 全变差距离可以理解成：把一个分布变成另一个，最少要挪动多少概率。猫 60%、狗 40% 变成猫 50%、狗 50%，要从猫挪 10% 给狗，距离就是 0.1。这里的 KL_t 是第 t 步的 teacher forcing KL，严格说是对基线自己采样出的前缀求平均，一段固定的语料只相当于其中一次采样。所以语料里应该放基线在目标任务上的输出，比如它给 GSM8K 写的解题过程。
 

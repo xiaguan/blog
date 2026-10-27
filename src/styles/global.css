@@ -182,9 +182,13 @@ th {
 	border-bottom-width: 2px;
 }
 
-.math-block {
+.katex {
+	font-size: 1.1em;
+}
+.katex-display {
 	margin: 1.5em 0;
 	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 ::selection {
