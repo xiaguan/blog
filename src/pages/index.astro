@@ -1,5 +1,6 @@
 ---
 import FormattedDate from '../components/FormattedDate.astro';
+import Links from '../components/Links.astro';
 import { SERIES, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import Page from '../layouts/Page.astro';
 import { getSeries, getSortedPosts, type Post, postHref } from '../lib/posts';
@@ -10,14 +11,26 @@ const yearOf = (post: Post) => post.data.pubDate.getFullYear();
 const years = [...new Set(posts.map(yearOf))];
 const shortTitle = (title: string) => title.replace(/^[^:：]+[:：]\s*/, '');
 const monthDay = { month: 'short', day: '2-digit' } as const;
+
+const building = [
+	{ name: 'kern', href: 'https://github.com/pegainfer-project/kern' },
+	{ name: 'pegainfer', href: SERIES.pegainfer.repo },
+	{ name: 'Pegaflow', href: SERIES.pegaflow.repo },
+];
+const contributing = [
+	{ name: 'Mooncake', href: 'https://github.com/kvcache-ai/Mooncake' },
+	{ name: 'vLLM', href: 'https://github.com/vllm-project/vllm' },
+	{ name: 'SGLang', href: 'https://github.com/sgl-project/sglang' },
+];
 ---
 
 <Page title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<section class="hero">
 		<h1>Systems and <span class="mark">LLM inference</span> engineering.</h1>
 		<p class="byline mono">
-			Jinyang Su — LLM inference engineer, ex-database storage. Building{' '}
-			<a href={SERIES.pegainfer.repo}>pegainfer</a> &amp; <a href={SERIES.pegaflow.repo}>Pegaflow</a>.
+			Jinyang Su — LLM inference engineer, ex-database storage.
+			<br />
+			Building <Links items={building} />. Contributing to <Links items={contributing} />.
 		</p>
 	</section>
 

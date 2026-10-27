@@ -1,0 +1,17 @@
+---
+interface Props {
+	items: { name: string; href: string }[];
+}
+
+const { items } = Astro.props;
+const separator = (i: number) => (i === 0 ? '' : i === items.length - 1 ? ' & ' : ', ');
+---
+
+{
+	items.map((item, i) => (
+		<>
+			{separator(i)}
+			<a href={item.href}>{item.name}</a>
+		</>
+	))
+}

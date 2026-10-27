@@ -8,7 +8,7 @@ export const SERIES = {
 	pegainfer: {
 		title: 'pegainfer',
 		description: 'A native Rust + CUDA LLM inference engine, built from scratch.',
-		repo: 'https://github.com/xiaguan/pegainfer',
+		repo: 'https://github.com/pegainfer-project/pegainfer',
 	},
 	pegaflow: {
 		title: 'Pegaflow',
