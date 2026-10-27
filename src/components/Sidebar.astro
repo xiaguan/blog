@@ -1,0 +1,129 @@
+---
+import { SITE_TITLE } from '../consts';
+import { getSeries, getSortedPosts } from '../lib/posts';
+
+const series = getSeries(await getSortedPosts());
+const path = Astro.url.pathname;
+
+const nav = [
+	{ href: '/', label: 'Posts' },
+	{ href: '/about/', label: 'About' },
+	{ href: 'https://github.com/xiaguan', label: 'GitHub' },
+	{ href: '/rss.xml', label: 'RSS' },
+];
+---
+
+<header class="sidebar">
+	<a href="/" class="brand"><span class="square"></span>{SITE_TITLE}</a>
+	<nav class="nav">
+		{
+			nav.map((item) => (
+				<a href={item.href} aria-current={item.href === path ? 'page' : undefined}>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+	<section class="series">
+		<h2 class="mono">series</h2>
+		{
+			series.map((s) => (
+				<a href={`/#${s.name}`}>
+					{s.title}
+					<span class="count">{s.parts.length}</span>
+				</a>
+			))
+		}
+	</section>
+</header>
+
+<style>
+	.sidebar {
+		position: sticky;
+		top: 0;
+		align-self: start;
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+		padding: 3.4rem 0 2rem 2.5rem;
+		font-size: 0.9rem;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		color: var(--title);
+		font-size: 1.05rem;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		text-decoration: none;
+	}
+	.square {
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 2px;
+		background: var(--green);
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+	}
+	.nav,
+	.series {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+	a {
+		color: var(--text);
+		text-decoration: none;
+	}
+	.nav a,
+	.series a {
+		padding: 0.15rem 0 0.15rem 0.75rem;
+		border-left: 2px solid transparent;
+		transition: color 0.15s, border-color 0.15s;
+	}
+	.nav a:hover,
+	.series a:hover {
+		color: var(--blue);
+	}
+	.nav a[aria-current='page'] {
+		color: var(--title);
+		font-weight: 600;
+		border-left-color: var(--blue);
+	}
+	h2 {
+		margin: 0 0 0.25rem;
+		padding-left: 0.75rem;
+		font-size: 0.72rem;
+		font-weight: 400;
+		color: var(--text-muted);
+	}
+	.count {
+		margin-left: 0.35rem;
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		font-variant-numeric: tabular-nums;
+	}
+	@media (max-width: 960px) {
+		.sidebar {
+			position: static;
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.9rem 1rem;
+			border-bottom: 1px solid var(--border);
+		}
+		.series {
+			display: none;
+		}
+		.nav {
+			flex-direction: row;
+			gap: 1rem;
+		}
+		.nav a {
+			padding: 0;
+			border-left: none;
+		}
+	}
+</style>

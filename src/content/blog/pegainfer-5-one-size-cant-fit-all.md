@@ -2,6 +2,9 @@
 title: "pegainfer (5): One Size Can't Fit All"
 description: 'An inference engine should not chase a super abstraction that can swallow every model, but should maintain a set of clearly bounded per-model engines.'
 pubDate: 'May 05 2026'
+series:
+  name: pegainfer
+  part: 5
 ---
 
 > **TL;DR**: An inference engine should not chase a super abstraction that can swallow every model, but should maintain a set of clearly bounded per-model engines. Share the things that are stable, and let go of the things that will truly fork.

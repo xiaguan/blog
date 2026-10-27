@@ -2,6 +2,9 @@
 title: 'pegainfer (6): MoE Expert Parallelism From Scratch'
 description: 'Narrowing MoE expert parallelism down to one layer in pure decode, this post walks through dispatch, expert computation, and combine.'
 pubDate: 'Jun 06 2026'
+series:
+  name: pegainfer
+  part: 6
 ---
 
 I have been learning MoE EP recently. Working on EP for Pegainfer has also been giving me a headache. After thinking about it, I might as well write some articles. If I can write it out, it probably means I roughly understand it.

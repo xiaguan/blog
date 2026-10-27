@@ -2,6 +2,9 @@
 title: 'pegainfer (7): MoE Expert Parallelism From Scratch (Part 2)'
 description: 'Continuing MoE EP from scratch, this post walks through dispatch buffers, metadata barriers, expert-major packing, and combine buffers.'
 pubDate: 'Jun 06 2026'
+series:
+  name: pegainfer
+  part: 7
 ---
 
 Continuing from the previous post.

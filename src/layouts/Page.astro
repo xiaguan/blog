@@ -1,0 +1,50 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Sidebar from '../components/Sidebar.astro';
+
+type Props = Parameters<typeof BaseHead>[0] & { lang?: string };
+
+const { lang = 'en', ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead {...head} />
+	</head>
+	<body>
+		<div class="app">
+			<Sidebar />
+			<div class="page">
+				<main>
+					<slot />
+				</main>
+				<Footer />
+			</div>
+		</div>
+	</body>
+</html>
+
+<style>
+	.app {
+		display: grid;
+		grid-template-columns: 220px minmax(0, 1fr);
+		max-width: 1120px;
+		margin: 0 auto;
+		min-height: 100vh;
+	}
+	.page {
+		display: flex;
+		flex-direction: column;
+	}
+	main {
+		flex: 1;
+		width: 100%;
+	}
+	@media (max-width: 960px) {
+		.app {
+			display: block;
+		}
+	}
+</style>

@@ -2,6 +2,9 @@
 title: 'Pegaflow (1): RDMA From Zero to Data Transfer'
 description: 'A complete beginner-to-practical guide to RDMA programming with libibverbs, from device discovery and memory registration to queue management, connection setup, and data transfer.'
 pubDate: 'Mar 20 2026'
+series:
+  name: pegaflow
+  part: 1
 ---
 
 I'm building a distributed P2P sharing feature for [Pegaflow](https://github.com/novitalabs/pegaflow), where different instances need to transfer data over RDMA. I don't have much RDMA experience myself, and I've found that zero-to-one RDMA tutorials are surprisingly scarce online, so this post is my attempt to document the learning process.

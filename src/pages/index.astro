@@ -1,50 +1,146 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import PostList from '../components/PostList.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { getSortedPosts } from '../lib/posts';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SERIES, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Page from '../layouts/Page.astro';
+import { getSeries, getSortedPosts, type Post, postHref } from '../lib/posts';
 
 const posts = await getSortedPosts();
+const series = getSeries(posts);
+const yearOf = (post: Post) => post.data.pubDate.getFullYear();
+const years = [...new Set(posts.map(yearOf))];
+const shortTitle = (title: string) => title.replace(/^[^:：]+[:：]\s*/, '');
+const monthDay = { month: 'short', day: '2-digit' } as const;
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="intro">
-				<h1>Systems and LLM inference engineering</h1>
-				<p>
-					I'm <strong>Jinyang Su</strong>, an LLM inference engineer and former database storage
-					engineer. I write about inference engines, CUDA kernels, RDMA, and storage internals,
-					mostly as notes to my future self. <a href="/about/">More about me</a>.
-				</p>
+<Page title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="hero">
+		<h1>Systems and <span class="mark">LLM inference</span> engineering.</h1>
+		<p class="byline mono">
+			Jinyang Su — LLM inference engineer, ex-database storage. Building{' '}
+			<a href={SERIES.pegainfer.repo}>pegainfer</a> &amp; <a href={SERIES.pegaflow.repo}>Pegaflow</a>.
+		</p>
+	</section>
+
+	<section>
+		<h2>Series</h2>
+		<ul class="outline">
+			{
+				series.map((s) => (
+					<li id={s.name}>
+						<div class="row">
+							<a href={s.repo} class="ref">{s.title}</a>
+							<span class="muted">{s.description}</span>
+						</div>
+						<ul class="numbered">
+							{s.parts.map((post) => (
+								<li>
+									<a href={postHref(post)} class="part">
+										{shortTitle(post.data.title)}
+									</a>
+								</li>
+							))}
+						</ul>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	{
+		years.map((year) => (
+			<section>
+				<h2 class="year">{year}</h2>
+				<ul class="outline">
+					{posts
+						.filter((post) => yearOf(post) === year)
+						.map((post) => (
+							<li>
+								<div class="row">
+									<a href={postHref(post)} class="ref">{post.data.title}</a>
+									<span class="date mono">
+										<FormattedDate date={post.data.pubDate} format={monthDay} />
+									</span>
+								</div>
+								<p class="description">{post.data.description}</p>
+							</li>
+						))}
+				</ul>
 			</section>
-			<PostList posts={posts} />
-		</main>
-		<Footer />
-	</body>
-</html>
+		))
+	}
+</Page>
 
 <style>
-	.intro {
-		margin-bottom: 3.5rem;
+	.hero {
+		padding: 2rem 0 3rem;
 	}
-	h1 {
-		margin: 0.5rem 0 0.75rem;
-		font-size: 1.75rem;
-	}
-	.intro p {
+	.hero h1 {
 		margin: 0;
-		color: var(--text-muted);
+		max-width: 12ch;
+		font-size: clamp(2.75rem, 7vw, 4.75rem);
+		line-height: 1;
+		letter-spacing: -0.045em;
 	}
-	.intro strong {
-		color: var(--text);
+	.byline {
+		margin: 2rem 0 0;
+		max-width: 52ch;
+		color: var(--text-muted);
+		line-height: 1.7;
+	}
+	h2 {
+		margin: 4rem 0 1rem;
+		font-size: 2.25rem;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		line-height: 1;
+	}
+	.year {
+		font-variant-numeric: tabular-nums;
+	}
+	.row {
+		display: flex;
+		align-items: baseline;
+		gap: 0.25rem 1rem;
+		flex-wrap: wrap;
+	}
+	.ref {
+		color: var(--title);
 		font-weight: 600;
+		text-decoration: none;
+	}
+	.ref:hover,
+	.part:hover {
+		color: var(--blue);
+	}
+	.outline > li {
+		margin-bottom: 0.9rem;
+	}
+	.date {
+		margin-left: auto;
+		color: var(--text-muted);
+		white-space: nowrap;
+	}
+	.muted,
+	.description {
+		color: var(--text-muted);
+		font-size: 0.9rem;
+	}
+	.description {
+		margin: 0.1rem 0 0;
+		line-height: 1.6;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.numbered {
+		margin-top: 0.4rem !important;
+	}
+	.part {
+		color: var(--text);
+		text-decoration: none;
+	}
+	.numbered li {
+		margin-bottom: 0.15rem;
 	}
 </style>

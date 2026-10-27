@@ -13,6 +13,7 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: image().optional(),
+			series: z.object({ name: z.enum(['pegainfer', 'pegaflow']), part: z.number() }).optional(),
 		}),
 });
 

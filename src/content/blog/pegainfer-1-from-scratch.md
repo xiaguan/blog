@@ -2,6 +2,9 @@
 title: 'pegainfer: A Native Rust Inference Engine from Scratch'
 description: 'Why I built a Rust + CUDA inference engine from scratch, the experience so far, and what comes next.'
 pubDate: 'Feb 17 2026'
+series:
+  name: pegainfer
+  part: 1
 ---
 
 ## Why Write an Inference Engine from Scratch in Rust?

@@ -2,6 +2,9 @@
 title: 'pegainfer (3): From Launch Overhead to CUDA Graph (Part 1)'
 description: 'Quantifying CUDA kernel launch overhead and exploring four approaches to eliminate it — CUDA Graph, Kernel Fusion, Mega Kernel, and Dynamic Parallelism.'
 pubDate: 'Feb 26 2026'
+series:
+  name: pegainfer
+  part: 3
 ---
 
 Every time the CPU submits a kernel to the GPU, it goes through a series of driver and runtime calls. This process takes about 4-6 μs. When the kernel's own computation time is only tens of microseconds, launch overhead can account for 7-10% and create visible gaps on the GPU timeline.

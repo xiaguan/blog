@@ -2,6 +2,9 @@
 title: 'pegainfer (2): Adding a Sampler to the Inference Engine'
 description: 'Implementing temperature, top-k, and top-p sampling in pegainfer — and how I collaborate with LLMs during development.'
 pubDate: 'Feb 21 2026'
+series:
+  name: pegainfer
+  part: 2
 ---
 
 In the last post, we built the skeleton of pegainfer from scratch — it runs Qwen3 4B, aligns with HuggingFace precision, but only supports greedy decoding. The output is deterministic, which is unfriendly for creative tasks. So this post is about the Sampler: teaching the model to think a little more freely.

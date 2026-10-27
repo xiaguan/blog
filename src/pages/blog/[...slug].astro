@@ -1,22 +1,28 @@
 ---
-import { type CollectionEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { getSortedPosts } from '../../lib/posts';
+import { getSeries, getSortedPosts, type Post, postHref, readingMinutes } from '../../lib/posts';
 
 export async function getStaticPaths() {
 	const posts = await getSortedPosts();
-	const link = (post?: CollectionEntry<'blog'>) =>
-		post && { title: post.data.title, href: `/blog/${post.id}/` };
+	const series = getSeries(posts);
+	const link = (post?: Post) => post && { title: post.data.title, href: postHref(post) };
 	return posts.map((post, i) => ({
 		params: { slug: post.id },
-		props: { post, newer: link(posts[i - 1]), older: link(posts[i + 1]) },
+		props: {
+			post,
+			newer: link(posts[i - 1]),
+			older: link(posts[i + 1]),
+			minutes: readingMinutes(post.body),
+			seriesParts: series.find((s) => s.name === post.data.series?.name)?.parts ?? [],
+		},
 	}));
 }
 
-const { post, newer, older } = Astro.props;
+const { post, ...nav } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BlogPost {...post.data} newer={newer} older={older}>
+<BlogPost {...post.data} {...nav}>
 	<Content />
 </BlogPost>

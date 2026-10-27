@@ -2,6 +2,9 @@
 title: 'pegainfer (4): From Pre-allocation to Graph Replay'
 description: 'Integrating CUDA Graph into a real Rust inference engine — pre-allocation, DecodeMeta, capture/replay lifecycle, and the pitfalls along the way.'
 pubDate: 'Mar 01 2026'
+series:
+  name: pegainfer
+  part: 4
 ---
 
 In the previous post, we used toy kernels to quantify CUDA kernel launch overhead (~4-6μs per launch) and experimented with four approaches: CUDA Graph, Kernel Fusion, Mega Kernel, and Dynamic Parallelism. This post goes back to a real scenario — integrating CUDA Graph into the decode path of the Rust inference engine pegainfer (Qwen3-4B, BF16, RTX 5070 Ti) to see how much faster it actually gets and what pitfalls we hit.
