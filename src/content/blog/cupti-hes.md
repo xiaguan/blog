@@ -5,6 +5,8 @@ pubDate: 'Nov 05 2026'
 heroImage: '../../assets/blog/cupti-hes.png'
 ---
 
+相关代码见 [pegainfer-project/kern](https://github.com/pegainfer-project/kern)。
+
 Google SRE 那本书里提到，观测系统有几个方面：
 
 - 延迟
