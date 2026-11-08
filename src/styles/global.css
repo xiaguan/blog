@@ -292,3 +292,38 @@ th {
 	clip-path: inset(50%);
 	white-space: nowrap;
 }
+
+/* The dusk study is scoped to the homepage. */
+body.dusk {
+	--bg: #17282e;
+	--surface: #20343a;
+	--title: #eee7d9;
+	--text: #c5cec9;
+	--text-muted: #9caead;
+	--border: #34474b;
+	--blue: #dda27c;
+	--blue-soft: #876d59;
+	--green: #d4976d;
+	--bullet: #82938f;
+	--guideline: #34474b;
+	--measure: 960px;
+	color-scheme: dark;
+}
+.dusk .app { max-width: 1320px; grid-template-columns: 210px minmax(0, 1fr); }
+.dusk main { padding: 3.5rem 3rem 4rem; }
+.dusk .sidebar { padding-top: 3.45rem; font-size: .8rem; }
+.dusk .brand { font-size: 1rem; font-weight: 500; }
+.dusk .square { width: .5rem; height: .65rem; border-radius: 0; }
+.dusk .nav a[aria-current='page'] { color: var(--blue); }
+.dusk a:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+@media(max-width: 960px) {
+	.dusk .app { display: block; }
+	.dusk .sidebar { padding: 1.2rem 2rem; }
+	.dusk main { padding: 2rem; }
+}
+@media(max-width: 600px) {
+	.dusk main { padding: 1.7rem 1.25rem 3rem; }
+	.dusk .sidebar { padding: 1rem 1.25rem; gap: .7rem; }
+	.dusk .nav { gap: .75rem; font-size: .72rem; }
+	.dusk .brand { font-size: .85rem; }
+}

@@ -3,9 +3,9 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Sidebar from '../components/Sidebar.astro';
 
-type Props = Parameters<typeof BaseHead>[0] & { lang?: string };
+type Props = Parameters<typeof BaseHead>[0] & { lang?: string; dusk?: boolean };
 
-const { lang = 'en', ...head } = Astro.props;
+const { lang = 'en', dusk = false, ...head } = Astro.props;
 ---
 
 <!doctype html>
@@ -13,7 +13,7 @@ const { lang = 'en', ...head } = Astro.props;
 	<head>
 		<BaseHead {...head} />
 	</head>
-	<body>
+	<body class:list={{ dusk }}>
 		<div class="app">
 			<Sidebar />
 			<div class="page">
